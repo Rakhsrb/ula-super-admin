@@ -32,13 +32,11 @@ const CollectionDetail = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<string>("");
   const [collection, setCollection] = useState<CollectionTypes | null>(null);
-  const [collectionNameInput, setCollectionNameInput] = useState<string>("");
+  const [bookNameInput, setBookNameInput] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
-  const [selectedCollectionId, setSelectedCollectionId] = useState<
-    string | null
-  >(null);
-  const [editedCollectionName, setEditedCollectionName] = useState<string>("");
+  const [bookId, setBookId] = useState<string | null>(null);
+  const [editedBookName, setEditedBookName] = useState<string>("");
   const { collectionName } = useParams();
 
   useEffect(() => {
@@ -59,49 +57,44 @@ const CollectionDetail = () => {
   }, [collectionName]);
 
   const handleCreateBook = async () => {
-    if (!collectionNameInput.trim()) return;
+    if (!bookNameInput.trim()) return;
 
     const formData = {
-      name: collectionNameInput,
+      name: bookNameInput,
       collectionId: collection?._id,
     };
 
     try {
-      const response = await Fetch.post("/collection/createNewBook", formData);
+      const response = await Fetch.post("collection/createNewBook", formData);
       console.log("Collection created successfully!", response.data);
-      setCollectionNameInput("");
+      setBookNameInput("");
       setIsModalOpen(false);
     } catch (error) {
       console.log("Error creating collection:", error);
     }
   };
 
-  const handleEditBookTypeName = async () => {
-    if (!editedCollectionName.trim() || !selectedCollectionId) return;
-
+  const handleDeleteBook = async () => {
+    if (!collection?._id || !bookId) return;
     try {
-      await Fetch.put(`/collection/booktype/`, {
-        bookId: collection?._id,
-        bookType: selectedCollectionId,
-        newCollection: editedCollectionName,
-      });
-      console.log("Updated!");
-
-      setIsEditModalOpen(false);
-    } catch (error) {
-      console.log("Error updating collection type:", error);
-    }
-  };
-
-  const handleDeleteBookName = async () => {
-    if (!collection?._id || !selectedCollectionId) return;
-    try {
-      await Fetch.delete(
-        `/collection/delete-type/${collection._id}/${selectedCollectionId}`
-      );
+      await Fetch.delete(`collection/deleteBook/${collection._id}/${bookId}`);
       setIsEditModalOpen(false);
     } catch (error) {
       console.log("Error deleting collection type:", error);
+    }
+  };
+
+  const handleEditBook = async () => {
+    if (!collection?._id || !bookId) return;
+    try {
+      await Fetch.put(`collection/editBook`, {
+        collectionId: collection._id,
+        bookId,
+        editedBookName,
+      });
+      setIsEditModalOpen(false);
+    } catch (error) {
+      console.log("Error updating book name:", error);
     }
   };
 
@@ -141,6 +134,12 @@ const CollectionDetail = () => {
 
       <h1 className="text-3xl font-bold text-white">Books</h1>
 
+      {collection?.books.length == 0 ? (
+        <h1 className="text-center text-white opacity-60">
+          Books are not available
+        </h1>
+      ) : null}
+
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
         {collection?.books.map((book, index) => (
           <div
@@ -166,7 +165,7 @@ const CollectionDetail = () => {
               <h3 className="text-lg font-semibold text-white">{book.name}</h3>
               <div className="flex flex-wrap justify-end gap-2">
                 <Sheet>
-                  <AddLevel kitobId={collection._id} bookTypeId={book._id} />
+                  <AddLevel collectionId={collection._id} bookId={book._id} />
                 </Sheet>
                 <Dialog
                   open={isEditModalOpen}
@@ -176,8 +175,8 @@ const CollectionDetail = () => {
                     <Button
                       variant="outline"
                       onClick={() => {
-                        setSelectedCollectionId(book._id);
-                        setEditedCollectionName(book.name);
+                        setBookId(book._id);
+                        setEditedBookName(book.name);
                         setIsEditModalOpen(true);
                       }}
                     >
@@ -196,15 +195,13 @@ const CollectionDetail = () => {
                       <Input
                         id="name"
                         placeholder="Enter new name..."
-                        value={editedCollectionName}
-                        onChange={(e) =>
-                          setEditedCollectionName(e.target.value)
-                        }
+                        value={editedBookName}
+                        onChange={(e) => setEditedBookName(e.target.value)}
                         className="col-span-3"
                       />
                     </div>
                     <DialogFooter>
-                      <Button onClick={handleEditBookTypeName} type="submit">
+                      <Button onClick={handleEditBook} type="submit">
                         Save changes
                       </Button>
                     </DialogFooter>
@@ -214,7 +211,7 @@ const CollectionDetail = () => {
                   <AlertDialogTrigger asChild>
                     <Button
                       variant="destructive"
-                      onClick={() => setSelectedCollectionId(book._id)}
+                      onClick={() => setBookId(book._id)}
                     >
                       Delete
                     </Button>
@@ -232,7 +229,7 @@ const CollectionDetail = () => {
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                       <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction onClick={handleDeleteBookName}>
+                      <AlertDialogAction onClick={handleDeleteBook}>
                         Delete
                       </AlertDialogAction>
                     </AlertDialogFooter>
@@ -262,8 +259,8 @@ const CollectionDetail = () => {
           <div className="grid gap-4 py-4">
             <Input
               placeholder="Enter collection name..."
-              value={collectionNameInput}
-              onChange={(e) => setCollectionNameInput(e.target.value)}
+              value={bookNameInput}
+              onChange={(e) => setBookNameInput(e.target.value)}
             />
           </div>
           <DialogFooter>

@@ -1,10 +1,11 @@
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { Fetch } from "@/middlewares/Fetch";
 import type { BookTypes } from "@/types/RootTypes";
-import { useEffect, useState } from "react";
-import { Play } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useParams } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Play } from "lucide-react";
+import AddNewUnit from "@/modules/AddNewUnit";
 
 const BookDetails = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -12,22 +13,22 @@ const BookDetails = () => {
   const [book, setBook] = useState<BookTypes | null>(null);
   const { collectionName, bookName } = useParams();
 
-  useEffect(() => {
-    const getBookByName = async () => {
-      setIsLoading(true);
-      try {
-        const response = (
-          await Fetch.get(`/collection/${collectionName}/${bookName}`)
-        ).data;
-        setBook(response.data);
-      } catch (error: any) {
-        setIsError("Failed to fetch collection details.");
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  const fetchBook = async () => {
+    setIsLoading(true);
+    try {
+      const response = (
+        await Fetch.get(`/collection/${collectionName}/${bookName}`)
+      ).data;
+      setBook(response.data);
+    } catch (error: any) {
+      setIsError("Failed to fetch collection details.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-    getBookByName();
+  useEffect(() => {
+    fetchBook();
   }, [collectionName, bookName]);
 
   if (isLoading) {
@@ -47,7 +48,7 @@ const BookDetails = () => {
   }
 
   return (
-    <div className="p-8">
+    <div className="p-8 h-screen overflow-y-auto">
       <h1 className="text-4xl font-bold mb-8 text-center text-white">
         {book.name}
       </h1>
@@ -55,14 +56,22 @@ const BookDetails = () => {
         {book.levels.map((level) => (
           <Card
             key={level._id}
-            className="overflow-hidden transition-all duration-300 hover:shadow-lg"
+            className="rounded-xl overflow-hidden border-none"
           >
             <CardHeader className="bg-primary text-primary-foreground">
-              <CardTitle>{level.level}</CardTitle>
+              <CardTitle className="flex justify-between items-center">
+                <h3>{level.level}</h3>
+                <AddNewUnit
+                  collectionName={collectionName!}
+                  bookId={book._id}
+                  levelId={level._id}
+                  onUnitAdded={fetchBook}
+                />
+              </CardTitle>
             </CardHeader>
-            <CardContent className="p-6">
-              {level.units.map((unit) => (
-                <div key={unit.title} className="mb-6">
+            <CardContent className="p-6 h-[400px] max-h-[400px] overflow-y-auto">
+              {level.units.map((unit, index) => (
+                <div key={index} className="mb-6">
                   <h3 className="text-xl font-semibold mb-3">{unit.title}</h3>
                   <ul className="space-y-2">
                     {unit.audios.map((audio) => (

@@ -22,17 +22,13 @@ import { Fetch } from "@/middlewares/Fetch";
 import { toast } from "sonner";
 
 export function AddLevel({
-  kitobId,
-  bookTypeId,
+  collectionId,
+  bookId,
 }: {
-  kitobId: string;
-  bookTypeId: string;
+  collectionId: string;
+  bookId: string;
 }) {
-  interface OptionType {
-    title: string;
-  }
-
-  const Options: OptionType[] = [
+  const Options: { title: string }[] = [
     {
       title: "A1",
     },
@@ -55,12 +51,12 @@ export function AddLevel({
 
   const [formData, setFormData] = useState<{
     level: string;
-    bookType: string;
+    collectionId: string;
     bookId: string;
   }>({
     level: "",
-    bookType: bookTypeId,
-    bookId: kitobId,
+    collectionId,
+    bookId,
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -70,15 +66,15 @@ export function AddLevel({
   const resetForm = () => {
     setFormData({
       level: "",
-      bookType: bookTypeId,
-      bookId: kitobId,
+      bookId,
+      collectionId,
     });
     setErrors({});
   };
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
-    if (!formData.level.trim()) newErrors.name = "Заголовок обязателен.";
+    if (!formData.level.trim()) newErrors.name = "Level is required.";
     return Object.keys(newErrors).length === 0;
   };
 
@@ -88,16 +84,11 @@ export function AddLevel({
     setIsLoading(true);
 
     try {
-      const response = await Fetch.post("/book/level", formData);
+      const response = await Fetch.post("/collection/newLevel", formData);
 
       console.log(response);
 
-      toast("Портфолио успешно добавлено", {
-        action: {
-          label: "Отменить",
-          onClick: () => console.log("Отмена"),
-        },
-      });
+      toast("New level has been added");
       resetForm();
       setIsSheetOpen(false);
     } catch (error: any) {

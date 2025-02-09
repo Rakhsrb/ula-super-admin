@@ -48,7 +48,7 @@ export default function Collections() {
 
   const handleDeleteAdmin = async (id: string) => {
     try {
-      (await Fetch.delete(`collection/${id}`)).data;
+      (await Fetch.delete(`collection/deleteCollection/${id}`)).data;
       dispatch(
         setCollections(data.filter((collection) => collection._id !== id))
       );
