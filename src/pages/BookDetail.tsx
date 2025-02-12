@@ -3,7 +3,6 @@ import { Link, useParams } from "react-router-dom";
 import { Fetch } from "@/middlewares/Fetch";
 import type { BookTypes } from "@/types/RootTypes";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Eye } from "lucide-react";
 import AddNewUnit from "@/modules/AddNewUnit";
 
 const BookDetails = () => {
@@ -69,11 +68,15 @@ const BookDetails = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="p-6 h-[400px] max-h-[400px] overflow-y-auto">
-              {level.units.map((unit, index) => ( 
+              {level.units.map((unit, index) => (
                 <div key={index} className="mb-6 flex justify-between">
-                  <h3 className="text-xl font-semibold mb-3">Unit {index + 1}</h3>
-                  <Link to={`/units/${collectionName}/${bookName}/${level.level}/${unit._id}`}>
-                    <Eye />
+                  <h3 className="text-xl font-semibold mb-3">
+                    Unit {index + 1}
+                  </h3>
+                  <Link
+                    to={`/units/${collectionName}/${bookName}/${level.level}/${unit._id}`}
+                  >
+                    Details
                   </Link>
                 </div>
               ))}

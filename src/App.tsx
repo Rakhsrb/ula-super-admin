@@ -71,7 +71,7 @@ function App() {
               element: <BookDetail />,
             },
             {
-              path: "/units/:collectionName/:bookName/:level/:unitName",
+              path: "/units/:collectionName/:bookName/:level/:unitId",
               element: <UnitDetails />,
             },
             {

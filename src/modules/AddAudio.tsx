@@ -45,19 +45,16 @@ const AddAudio = ({
   };
 
   const handleSubmit = async () => {
-    if (!audios.some((audio) => audio.file && audio.label)) {
-      return alert("At least one audio file and label is required!");
+    if (audios.some((audio) => !audio.file || !audio.label)) {
+      return alert("Each audio must have a file and label!");
     }
 
     setIsSubmitting(true);
     try {
       const formData = new FormData();
-
       audios.forEach((audio, index) => {
-        if (audio.file && audio.label) {
-          formData.append(`audios[${index}][file]`, audio.file);
-          formData.append(`audios[${index}][label]`, audio.label);  
-        }
+        formData.append(`audios[${index}][file]`, audio.file as File);
+        formData.append(`audios[${index}][label]`, audio.label);
       });
 
       await Fetch.post(
