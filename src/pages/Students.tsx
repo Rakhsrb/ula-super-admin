@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { RootState } from "../store/RootStore";
 import { useDispatch, useSelector } from "react-redux";
 import { Fetch } from "../middlewares/Fetch";
-import { UserTypes } from "../types/RootTypes";
+import { StudentTypes } from "../types/RootTypes";
 import {
   setStudents,
   setStudentsError,
@@ -56,7 +56,7 @@ export default function Students() {
     }
   };
 
-  const filteredData = data.filter((student: UserTypes) =>
+  const filteredData = data.filter((student: StudentTypes) =>
     `${student.firstName} ${student.lastName}`
       .toLowerCase()
       .includes(searchTerm.toLowerCase())
@@ -102,7 +102,7 @@ export default function Students() {
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {filteredData.map((student: UserTypes) => (
+          {filteredData.map((student: StudentTypes) => (
             <div
               key={student._id}
               className="bg-[#202020] rounded-lg p-4 flex flex-col gap-3 relative"

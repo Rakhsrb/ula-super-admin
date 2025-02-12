@@ -13,6 +13,7 @@ import Students from "./pages/Students";
 import CollectionDetail from "./pages/CollectionDetail";
 import BookDetail from "./pages/BookDetail";
 import Collections from "./pages/Collections";
+import UnitDetails from "./pages/UnitDetail";
 function App() {
   const { isPending, isAuth } = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch();
@@ -68,6 +69,10 @@ function App() {
             {
               path: "/collections/:collectionName/:bookName",
               element: <BookDetail />,
+            },
+            {
+              path: "/units/:collectionName/:bookName/:level/:unitName",
+              element: <UnitDetails />,
             },
             {
               path: "*",

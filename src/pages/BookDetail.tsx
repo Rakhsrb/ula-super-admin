@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Fetch } from "@/middlewares/Fetch";
 import type { BookTypes } from "@/types/RootTypes";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Play } from "lucide-react";
+import { Eye } from "lucide-react";
 import AddNewUnit from "@/modules/AddNewUnit";
 
 const BookDetails = () => {
@@ -71,29 +70,11 @@ const BookDetails = () => {
             </CardHeader>
             <CardContent className="p-6 h-[400px] max-h-[400px] overflow-y-auto">
               {level.units.map((unit, index) => (
-                <div key={index} className="mb-6">
+                <div key={index} className="mb-6 flex justify-between">
                   <h3 className="text-xl font-semibold mb-3">{unit.title}</h3>
-                  <ul className="space-y-2">
-                    {unit.audios.map((audio) => (
-                      <li
-                        key={audio.file}
-                        className="flex items-center justify-between p-2 bg-secondary rounded-md"
-                      >
-                        <span className="text-sm">{audio.label}</span>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          className="text-primary hover:text-primary-foreground hover:bg-primary"
-                          onClick={() => {
-                            const audioElement = new Audio(audio.file);
-                            audioElement.play();
-                          }}
-                        >
-                          <Play size={16} />
-                        </Button>
-                      </li>
-                    ))}
-                  </ul>
+                  <Link to={`/units/${collectionName}/${bookName}/${level.level}/${unit.title}`}>
+  <Eye />
+</Link>
                 </div>
               ))}
             </CardContent>

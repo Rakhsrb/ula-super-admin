@@ -24,7 +24,6 @@ export default function Admins() {
   );
   const dispatch = useDispatch();
 
-  console.log(data);
   
   useEffect(() => {
     async function getData() {
@@ -36,7 +35,6 @@ export default function Admins() {
         } else {
           dispatch(setAdminsError(response.message));
         }
-        console.log(response);
         
       } catch (error: any) {
         dispatch(
