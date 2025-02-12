@@ -15,7 +15,7 @@ const UnitDetails = () => {
   const { collectionName, bookName, level,unitName } = useParams();
 
   
-
+  
   const fetchUnits = async () => {
     setIsLoading(true);
     try {
@@ -29,7 +29,6 @@ const UnitDetails = () => {
       setIsLoading(false);
     }
   };
-
   useEffect(() => {
     fetchUnits();
   }, [collectionName, bookName]);

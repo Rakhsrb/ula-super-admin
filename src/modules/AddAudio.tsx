@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import {
   Sheet,
@@ -44,7 +43,7 @@ const AddAudio = ({
       )
     );
   };
-  
+
   const handleSubmit = async () => {
     if (!audios.some((audio) => audio.file && audio.label)) {
       return alert("At least one audio file and label is required!");
@@ -57,7 +56,7 @@ const AddAudio = ({
       audios.forEach((audio, index) => {
         if (audio.file && audio.label) {
           formData.append(`audios[${index}][file]`, audio.file);
-          formData.append(`audios[${index}][label]`, audio.label);
+          formData.append(`audios[${index}][label]`, audio.label);  
         }
       });
 
@@ -65,7 +64,7 @@ const AddAudio = ({
         `/collection/addAudio/${collectionName}/${bookName}/${level}/${unitId}`,
         formData
       );
-      
+
       alert("Unit added successfully!");
       setAudios([{ file: null, label: "" }]);
     } catch (error) {
@@ -90,6 +89,7 @@ const AddAudio = ({
             <div key={index} className="space-y-2">
               <Input
                 type="file"
+                name="audios"
                 accept="audio/*"
                 onChange={(e) =>
                   updateAudioField(index, "file", e.target.files?.[0] || null)

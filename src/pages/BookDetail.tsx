@@ -69,12 +69,12 @@ const BookDetails = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="p-6 h-[400px] max-h-[400px] overflow-y-auto">
-              {level.units.map((unit, index) => (
+              {level.units.map((unit, index) => ( 
                 <div key={index} className="mb-6 flex justify-between">
-                  <h3 className="text-xl font-semibold mb-3">{unit.title}</h3>
-                  <Link to={`/units/${collectionName}/${bookName}/${level.level}/${unit.title}`}>
-  <Eye />
-</Link>
+                  <h3 className="text-xl font-semibold mb-3">Unit {index + 1}</h3>
+                  <Link to={`/units/${collectionName}/${bookName}/${level.level}/${unit._id}`}>
+                    <Eye />
+                  </Link>
                 </div>
               ))}
             </CardContent>
