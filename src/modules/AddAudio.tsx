@@ -23,50 +23,48 @@ const AddAudio = ({
   level,
   unitId,
 }: AddUnitSheetProps) => {
-  const [audios, setAudios] = useState<{ file: File | null; label: string }[]>([
-    { file: null, label: "" },
-  ]);
+  const [audio, setAudio] = useState<{ file: File | null; label: string }>({
+    file: null,
+    label: "",
+  });
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const addAudioField = () => {
-    setAudios([...audios, { file: null, label: "" }]);
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setAudio({ ...audio, [name]: value });
   };
 
-  const updateAudioField = (
-    index: number,
-    field: "file" | "label",
-    value: string | File | null
-  ) => {
-    setAudios((prevAudios) =>
-      prevAudios.map((audio, i) =>
-        i === index ? { ...audio, [field]: value } : audio
-      )
-    );
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    setAudio({ ...audio, file: file });
   };
 
   const handleSubmit = async () => {
-    if (audios.some((audio) => !audio.file || !audio.label)) {
-      return alert("Each audio must have a file and label!");
+    if (!audio.file) {
+      alert("Please select an audio file!");
+      return;
     }
 
     setIsSubmitting(true);
     try {
       const formData = new FormData();
-      audios.forEach((audio, index) => {
-        formData.append(`audios[${index}][file]`, audio.file as File);
-        formData.append(`audios[${index}][label]`, audio.label);
-      });
+      formData.append("audio", audio.file);
+      formData.append("label", audio.label);
 
       await Fetch.post(
-        `/collection/addAudio/${collectionName}/${bookName}/${level}/${unitId}`,
-        formData
+        `collection/addAudio/${collectionName}/${bookName}/${level}/${unitId}`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
       );
 
-      alert("Unit added successfully!");
-      setAudios([{ file: null, label: "" }]);
+      alert("Audio added successfully!");
+      setAudio({ file: null, label: "" });
     } catch (error) {
-      console.error("Error adding unit:", error);
-      alert("Failed to add unit!");
+      console.error("Error adding audio:", error);
+      alert("Failed to add audio!");
     } finally {
       setIsSubmitting(false);
     }
@@ -82,29 +80,21 @@ const AddAudio = ({
           <SheetTitle>Add Audios</SheetTitle>
         </SheetHeader>
         <div className="mt-4 space-y-4">
-          {audios.map((audio, index) => (
-            <div key={index} className="space-y-2">
-              <Input
-                type="file"
-                name="audios"
-                accept="audio/*"
-                onChange={(e) =>
-                  updateAudioField(index, "file", e.target.files?.[0] || null)
-                }
-              />
-              <Input
-                placeholder="Audio Label"
-                value={audio.label}
-                onChange={(e) =>
-                  updateAudioField(index, "label", e.target.value)
-                }
-              />
-            </div>
-          ))}
+          <div className="space-y-2">
+            <Input
+              placeholder="Audio Label"
+              name="label"
+              value={audio.label}
+              onChange={handleInputChange}
+            />
+            <Input
+              type="file"
+              name="audio"
+              accept="audio/*"
+              onChange={handleFileChange}
+            />
+          </div>
 
-          <Button variant="outline" onClick={addAudioField} className="w-full">
-            + More Audio
-          </Button>
           <Button
             onClick={handleSubmit}
             disabled={isSubmitting}
