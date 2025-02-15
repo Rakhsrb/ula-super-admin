@@ -31,7 +31,7 @@ export interface CollectionTypes {
   _id: string;
   collectionImage: string;
   collectionName: string;
-  books: BookTypes[];
+  books: BooksTypes[];
   createdAt: string;
   updatedAt: string;
   __v: number;
@@ -45,7 +45,7 @@ export interface Audio {
 export interface Unit {
   title: string;
   audios: Audio[];
-  _id : string
+  _id: string;
 }
 
 export interface Book {
@@ -53,7 +53,8 @@ export interface Book {
   units: Unit[];
   _id: string;
 }
-export interface BookTypes {
+
+export interface BooksTypes {
   name: string;
   levels: [Book];
   _id: string;

@@ -12,14 +12,14 @@ import { Fetch } from "@/middlewares/Fetch";
 
 interface AddUnitSheetProps {
   collectionName: string;
-  bookId: string;
+  bookName: string;
   levelId: string;
   onUnitAdded: () => void;
 }
 
 const AddNewUnit = ({
   collectionName,
-  bookId,
+  bookName,
   levelId,
   onUnitAdded,
 }: AddUnitSheetProps) => {
@@ -32,7 +32,7 @@ const AddNewUnit = ({
     setIsSubmitting(true);
     try {
       await Fetch.post(
-        `/collection/addUnit/${collectionName}/${bookId}/${levelId}`,
+        `collection/addUnit/${collectionName}/${bookName}/${levelId}`,
         { title }
       );
       alert("Unit added successfully!");

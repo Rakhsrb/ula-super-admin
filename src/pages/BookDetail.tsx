@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Fetch } from "@/middlewares/Fetch";
-import type { BookTypes } from "@/types/RootTypes";
+import type { BooksTypes } from "@/types/RootTypes";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import AddNewUnit from "@/modules/AddNewUnit";
 
 const BookDetails = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<string>("");
-  const [book, setBook] = useState<BookTypes | null>(null);
+  const [book, setBook] = useState<BooksTypes | null>(null);
   const { collectionName, bookName } = useParams();
 
   const fetchBook = async () => {
@@ -28,6 +28,8 @@ const BookDetails = () => {
   useEffect(() => {
     fetchBook();
   }, [collectionName, bookName]);
+
+  console.log(book);
 
   if (isLoading) {
     return (
@@ -61,7 +63,7 @@ const BookDetails = () => {
                 <h3>{level.level}</h3>
                 <AddNewUnit
                   collectionName={collectionName!}
-                  bookId={book._id}
+                  bookName={book.name}
                   levelId={level._id}
                   onUnitAdded={fetchBook}
                 />
