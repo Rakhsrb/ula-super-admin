@@ -72,6 +72,7 @@ const BookDetails = () => {
                 <div key={index} className="mb-6 flex justify-between">
                   <h3 className="text-xl font-semibold mb-3">
                     Unit {index + 1}
+                    {/* {unit.title} */}
                   </h3>
                   <Link
                     to={`/units/${collectionName}/${bookName}/${level.level}/${unit._id}`}

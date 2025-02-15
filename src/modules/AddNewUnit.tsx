@@ -26,20 +26,14 @@ const AddNewUnit = ({
   const [title, setTitle] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const FormData = {
-    title:title
-  }
-
-  
-
   const handleSubmit = async () => {
     if (!title.trim()) return alert("Title is required!");
-    
+
     setIsSubmitting(true);
     try {
       await Fetch.post(
         `/collection/addUnit/${collectionName}/${bookId}/${levelId}`,
-        FormData
+        { title }
       );
       alert("Unit added successfully!");
       setTitle("");
