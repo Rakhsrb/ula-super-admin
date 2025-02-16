@@ -96,7 +96,7 @@ export function AddAdmin() {
       }}
     >
       <SheetTrigger asChild>
-        <Button variant="secondary">Create Admin</Button>
+        <Button variant="default">Create Admin</Button>
       </SheetTrigger>
       <SheetContent className="h-full w-full sm:max-w-md sm:h-auto bg-[#202020] text-white border-none">
         <SheetHeader>

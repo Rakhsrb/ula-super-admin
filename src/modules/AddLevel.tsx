@@ -22,10 +22,10 @@ import { Fetch } from "@/middlewares/Fetch";
 import { toast } from "sonner";
 
 export function AddLevel({
-  collectionId,
+  collectionName,
   bookId,
 }: {
-  collectionId: string;
+  collectionName: string;
   bookId: string;
 }) {
   const Options: { title: string }[] = [
@@ -51,11 +51,11 @@ export function AddLevel({
 
   const [formData, setFormData] = useState<{
     level: string;
-    collectionId: string;
+    collectionName: string;
     bookId: string;
   }>({
     level: "",
-    collectionId,
+    collectionName,
     bookId,
   });
 
@@ -67,7 +67,7 @@ export function AddLevel({
     setFormData({
       level: "",
       bookId,
-      collectionId,
+      collectionName,
     });
     setErrors({});
   };
@@ -107,13 +107,13 @@ export function AddLevel({
       }}
     >
       <SheetTrigger asChild>
-        <Button variant="default" className="bg-blue-600 hover:bg-blue-500">
-          Add level
+        <Button variant="default" className="bg-sky-600 hover:bg-sky-500">
+          add level
         </Button>
       </SheetTrigger>
-      <SheetContent className="h-screen space-y-5 w-full sm:max-w-md bg-[#202020] text-white border-none">
+      <SheetContent className="h-screen space-y-5 w-full sm:max-w-md bg-white text-sky-600 border-none">
         <SheetHeader>
-          <SheetTitle className="text-white text-2xl">
+          <SheetTitle className="text-sky-600 text-2xl">
             New book level
           </SheetTitle>
         </SheetHeader>
@@ -130,7 +130,7 @@ export function AddLevel({
               <SelectItem
                 key={index}
                 value={item.title}
-                className="hover:bg-green-600"
+                className="hover:bg-sky-600 hover:text-white"
               >
                 {item.title}
               </SelectItem>
@@ -144,9 +144,10 @@ export function AddLevel({
         <SheetFooter>
           <Button
             type="button"
-            variant="secondary"
+            variant="default"
             onClick={handleSubmit}
             disabled={isLoading}
+            className="bg-sky-600"
           >
             {isLoading ? "Загрузка..." : "Create"}
           </Button>

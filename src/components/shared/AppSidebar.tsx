@@ -51,7 +51,7 @@ export function AppSidebar() {
   return (
     <aside
       style={{ transition: "all ease-in-out .3s" }}
-      className={`bg-[#202020] text-white h-screen p-4 ${
+      className={`bg-sky-600 text-white h-screen p-4 ${
         isSidebarOpen ? "w-[300px]" : "w-[60px]"
       }`}
     >

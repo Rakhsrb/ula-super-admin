@@ -4,11 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Fetch } from "../middlewares/Fetch";
-import { UserTypes } from "@/types/RootTypes";
+import { AdminTypes } from "@/types/RootTypes";
 
 interface LoginResponse {
   token: string;
-  data: UserTypes;
+  data: AdminTypes;
   message: string;
 }
 

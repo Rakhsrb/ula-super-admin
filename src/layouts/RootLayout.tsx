@@ -7,9 +7,9 @@ function RootLayout() {
     <>
       <section className="flex h-screen overflow-hidden">
         <AppSidebar />
-        <main className="w-full bg-[#333533] bg-opacity-90">
+        <main className="w-full bg-sky-100 bg-opacity-90">
           <Outlet />
-          <Toaster className="bg-[#333533] text-white" />
+          <Toaster className="bg-sky-100 text-white" />
         </main>
       </section>
     </>

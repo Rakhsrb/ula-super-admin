@@ -14,14 +14,14 @@ interface AddUnitSheetProps {
   collectionName: string;
   bookName: string;
   levelId: string;
-  onUnitAdded: () => void;
+  mutate: any;
 }
 
 const AddNewUnit = ({
   collectionName,
   bookName,
   levelId,
-  onUnitAdded,
+  mutate,
 }: AddUnitSheetProps) => {
   const [title, setTitle] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -37,7 +37,7 @@ const AddNewUnit = ({
       );
       alert("Unit added successfully!");
       setTitle("");
-      onUnitAdded();
+      mutate();
     } catch (error) {
       console.error("Error adding unit:", error);
       alert("Failed to add unit!");
@@ -49,11 +49,13 @@ const AddNewUnit = ({
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="secondary">New Unit</Button>
+        <Button variant="secondary" className="text-sky-600">
+          New Unit
+        </Button>
       </SheetTrigger>
-      <SheetContent side="right" className="w-[400px]">
+      <SheetContent side="right" className="w-[400px] text-sky-600">
         <SheetHeader>
-          <SheetTitle>Add New Unit</SheetTitle>
+          <SheetTitle className="text-sky-600">Add New Unit</SheetTitle>
         </SheetHeader>
         <div className="mt-4 space-y-4">
           <Input
@@ -64,7 +66,7 @@ const AddNewUnit = ({
           <Button
             onClick={handleSubmit}
             disabled={isSubmitting}
-            className="w-full"
+            className="w-full bg-sky-600"
           >
             {isSubmitting ? "Adding..." : "Add Unit"}
           </Button>

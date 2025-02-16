@@ -15,7 +15,7 @@ import {
 import { Fetch } from "@/middlewares/Fetch";
 import { toast } from "sonner";
 
-export function AddNewCollection() {
+export function AddNewCollection({ mutate }: { mutate: any }) {
   const [formData, setFormData] = useState<{
     collectionName: string;
     photo: File | null;
@@ -79,6 +79,7 @@ export function AddNewCollection() {
       });
       resetForm();
       setIsSheetOpen(false);
+      mutate();
     } catch (error: any) {
       console.log(error);
     } finally {
@@ -95,11 +96,11 @@ export function AddNewCollection() {
       }}
     >
       <SheetTrigger asChild>
-        <Button variant="secondary">New collection</Button>
+        <Button variant="default">New collection</Button>
       </SheetTrigger>
-      <SheetContent className="h-screen overflow-y-auto w-full sm:max-w-md sm:h-auto bg-[#202020] text-white border-none">
+      <SheetContent className="h-screen overflow-y-auto w-full sm:max-w-md sm:h-auto bg-white text-sky-600 border-none">
         <SheetHeader>
-          <SheetTitle className="text-white text-2xl">
+          <SheetTitle className="text-sky-600 text-2xl">
             Adding new collection
           </SheetTitle>
         </SheetHeader>
@@ -147,7 +148,7 @@ export function AddNewCollection() {
             <div className="flex items-center space-x-4">
               <label
                 htmlFor="photo"
-                className="flex items-center justify-center w-full h-32 bg-gray-800 border-2 border-dashed border-gray-600 rounded-lg cursor-pointer hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="flex items-center justify-center w-full h-32 border-2 border-dashed border-sky-600 rounded-lg cursor-pointer hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 {formData.photo ? (
                   <img
@@ -156,7 +157,7 @@ export function AddNewCollection() {
                     className="w-full h-full object-cover rounded-lg"
                   />
                 ) : (
-                  <span className="text-sm text-gray-400">Upload image</span>
+                  <span className="text-sm text-sky-600">Upload image</span>
                 )}
                 <Input
                   id="photo"
@@ -185,9 +186,10 @@ export function AddNewCollection() {
         <SheetFooter>
           <Button
             type="button"
-            variant="secondary"
+            variant="default"
             onClick={handleSubmit}
             disabled={isLoading}
+            className="bg-sky-600"
           >
             {isLoading ? "Loading..." : "Create"}
           </Button>

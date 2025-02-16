@@ -1,7 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Sheet } from "@/components/ui/sheet";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,73 +21,60 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { AddLevel } from "@/modules/AddLevel";
-import type { CollectionTypes } from "@/types/RootTypes";
+
+import useSWR from "swr";
 
 import { Fetch } from "@/middlewares/Fetch";
 import { Link, useParams } from "react-router-dom";
+import { CollectionTypes } from "@/types/RootTypes";
+import { SquarePen, Trash } from "lucide-react";
+
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 const CollectionDetail = () => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isError, setIsError] = useState<string>("");
-  const [collection, setCollection] = useState<CollectionTypes | null>(null);
+  const { collectionName } = useParams();
+  const { data, error, isLoading, mutate } = useSWR<{ data: CollectionTypes }>(
+    `http://localhost:8000/api/collection/${collectionName}`,
+    fetcher
+  );
+
   const [bookNameInput, setBookNameInput] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
   const [bookId, setBookId] = useState<string | null>(null);
   const [editedBookName, setEditedBookName] = useState<string>("");
-  const { collectionName } = useParams();
-
-  useEffect(() => {
-    const getCollectionByName = async () => {
-      setIsLoading(true);
-      try {
-        const response = (await Fetch.get(`/collection/${collectionName}`))
-          .data;
-        setCollection(response.data);
-      } catch (error: any) {
-        setIsError("Failed to fetch collection details.");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    getCollectionByName();
-  }, [collectionName]);
 
   const handleCreateBook = async () => {
     if (!bookNameInput.trim()) return;
-
-    const formData = {
-      name: bookNameInput,
-      collectionId: collection?._id,
-    };
-
     try {
-      const response = await Fetch.post("collection/createNewBook", formData);
-      console.log("Collection created successfully!", response.data);
+      await Fetch.post("collection/createNewBook", {
+        name: bookNameInput,
+        collectionId: data?.data._id,
+      });
       setBookNameInput("");
       setIsModalOpen(false);
+      mutate();
     } catch (error) {
-      console.log("Error creating collection:", error);
+      console.log("Error creating book:", error);
     }
   };
 
   const handleDeleteBook = async () => {
-    if (!collection?._id || !bookId) return;
+    if (!data?.data?._id || !bookId) return;
     try {
-      await Fetch.delete(`collection/deleteBook/${collection._id}/${bookId}`);
+      await Fetch.delete(`collection/deleteBook/${collectionName}/${bookId}`);
       setIsEditModalOpen(false);
+      mutate();
     } catch (error) {
-      console.log("Error deleting collection type:", error);
+      console.log("Error deleting book:", error);
     }
   };
 
   const handleEditBook = async () => {
-    if (!collection?._id || !bookId) return;
+    if (!data?.data._id || !bookId) return;
     try {
-      await Fetch.put(`collection/editBook`, {
-        collectionId: collection._id,
+      await Fetch.put(`data/editBook`, {
+        collectionId: data.data._id,
         bookId,
         editedBookName,
       });
@@ -97,57 +83,60 @@ const CollectionDetail = () => {
       console.log("Error updating book name:", error);
     }
   };
-
-  if (isLoading) {
+  if (error) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <span className="animate-spin text-white h-10 w-10 border-4 border-dotted border-white rounded-full"></span>
+      <div className="text-center mt-10">
+        <p className="text-red-500">Failed to load data. Please try again.</p>
       </div>
     );
   }
 
-  if (isError) {
-    return <div className="text-destructive text-center mt-10">{isError}</div>;
+  if (isLoading) {
+    return (
+      <div className="h-screen flex justify-center items-center">
+        <span className="h-16 w-16 border-[6px] border-dotted border-sky-600 animate-spin rounded-full"></span>
+      </div>
+    );
   }
 
   return (
     <div className="p-4 space-y-10 h-screen overflow-y-auto">
-      <div className="bg-[#202020] shadow-lg rounded-lg overflow-hidden">
+      <div className="bg-white shadow-lg rounded-lg overflow-hidden">
         <div className="md:flex">
           <img
             className="h-48 w-full object-cover md:w-48"
-            src={collection?.collectionImage}
-            alt={collection?.collectionName}
+            src={data?.data.collectionImage}
+            alt={data?.data.collectionName}
           />
           <div className="p-8">
             <h1 className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-green-700 sm:text-4xl">
-              {collection?.collectionName}
+              {data?.data.collectionName}
             </h1>
-            <p className="mt-4 text-xl text-white">
-              In this collection{" "}
-              <span className="text-sky-600">{collection?.books.length}</span>{" "}
+            <p className="mt-4 text-xl">
+              In this data{" "}
+              <span className="text-sky-600">({data?.data.books.length})</span>{" "}
               books
             </p>
           </div>
         </div>
       </div>
 
-      <h1 className="text-3xl font-bold text-white">Books</h1>
+      <h1 className="text-3xl font-bold text-sky-600">Books</h1>
 
-      {collection?.books.length == 0 ? (
+      {data?.data.books.length == 0 ? (
         <h1 className="text-center text-white opacity-60">
           Books are not available
         </h1>
       ) : null}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-        {collection?.books.map((book, index) => (
+        {data?.data.books.map((book, index) => (
           <div
             key={index}
             className="bg-secondary rounded-lg overflow-hidden shadow-lg transition-all duration-300 hover:shadow-xl"
           >
             <Link
-              to={`/collections/${collection.collectionName}/${book.name}`}
+              to={`/collections/${data.data.collectionName}/${book.name}`}
               className="block relative overflow-hidden group"
             >
               <img
@@ -161,12 +150,11 @@ const CollectionDetail = () => {
                 </span>
               </div>
             </Link>
-            <div className="p-4 space-y-4 bg-[#202020]">
-              <h3 className="text-lg font-semibold text-white">{book.name}</h3>
+            <div className="p-4 space-y-4 bg-white">
+              <h3 className="text-lg font-semibold text-sky-600">
+                {book.name}
+              </h3>
               <div className="flex flex-wrap justify-end gap-2">
-                <Sheet>
-                  <AddLevel collectionId={collection._id} bookId={book._id} />
-                </Sheet>
                 <Dialog
                   open={isEditModalOpen}
                   onOpenChange={setIsEditModalOpen}
@@ -180,15 +168,15 @@ const CollectionDetail = () => {
                         setIsEditModalOpen(true);
                       }}
                     >
-                      Edit
+                      <SquarePen />
                     </Button>
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-[425px]">
                     <DialogHeader>
                       <DialogTitle>Edit Book Type Name</DialogTitle>
                       <DialogDescription>
-                        Make changes to the collection type name here. Click
-                        save when you're done.
+                        Make changes to the data type name here. Click save when
+                        you're done.
                       </DialogDescription>
                     </DialogHeader>
                     <div className="grid gap-4 py-4">
@@ -213,7 +201,7 @@ const CollectionDetail = () => {
                       variant="destructive"
                       onClick={() => setBookId(book._id)}
                     >
-                      Delete
+                      <Trash />
                     </Button>
                   </AlertDialogTrigger>
                   <AlertDialogContent>
@@ -223,8 +211,7 @@ const CollectionDetail = () => {
                       </AlertDialogTitle>
                       <AlertDialogDescription>
                         This action cannot be undone. This will permanently
-                        delete the collection type and remove all associated
-                        data.
+                        delete the data type and remove all associated data.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
@@ -242,29 +229,36 @@ const CollectionDetail = () => {
       </div>
 
       <div className="flex justify-center items-center">
-        <Button onClick={() => setIsModalOpen(true)} variant={"outline"}>
+        <Button
+          onClick={() => setIsModalOpen(true)}
+          variant={"outline"}
+          className="bg-sky-600 hover:bg-sky-500 hover:text-white text-white"
+        >
           + New book
         </Button>
       </div>
 
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[425px] text-sky-600">
           <DialogHeader>
             <DialogTitle>Create Collection</DialogTitle>
             <DialogDescription>
-              Enter a name for your new collection. Click create when you're
-              done.
+              Enter a name for your new data. Click create when you're done.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <Input
-              placeholder="Enter collection name..."
+              placeholder="Enter data name..."
               value={bookNameInput}
               onChange={(e) => setBookNameInput(e.target.value)}
             />
           </div>
           <DialogFooter>
-            <Button onClick={handleCreateBook} type="submit">
+            <Button
+              onClick={handleCreateBook}
+              type="submit"
+              className="bg-sky-600"
+            >
               Create
             </Button>
           </DialogFooter>

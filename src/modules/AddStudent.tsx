@@ -99,7 +99,7 @@ export function AddStudent() {
       }}
     >
       <SheetTrigger asChild>
-        <Button variant="secondary">Add Student</Button>
+        <Button variant="default">Add Student</Button>
       </SheetTrigger>
       <SheetContent className="h-full w-full sm:max-w-md sm:h-auto bg-[#202020] text-white border-none">
         <SheetHeader>
