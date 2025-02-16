@@ -53,7 +53,7 @@ const AddNewUnit = ({
           New Unit
         </Button>
       </SheetTrigger>
-      <SheetContent side="right" className="w-[400px] text-sky-600">
+      <SheetContent side="right" className="w-full max-w-[400px] text-sky-600">
         <SheetHeader>
           <SheetTitle className="text-sky-600">Add New Unit</SheetTitle>
         </SheetHeader>

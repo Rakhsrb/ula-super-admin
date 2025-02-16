@@ -15,6 +15,7 @@ interface AddUnitSheetProps {
   bookName: string | undefined;
   level: string | undefined;
   unitId: string;
+  mutate: any;
 }
 
 const AddAudio = ({
@@ -22,6 +23,7 @@ const AddAudio = ({
   bookName,
   level,
   unitId,
+  mutate,
 }: AddUnitSheetProps) => {
   const [audio, setAudio] = useState<{ file: File | null; label: string }>({
     file: null,
@@ -62,6 +64,7 @@ const AddAudio = ({
 
       alert("Audio added successfully!");
       setAudio({ file: null, label: "" });
+      mutate();
     } catch (error) {
       console.error("Error adding audio:", error);
       alert("Failed to add audio!");
@@ -73,11 +76,13 @@ const AddAudio = ({
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="secondary">Add Audios</Button>
+        <Button variant="default" className="bg-sky-600">
+          Add Audios
+        </Button>
       </SheetTrigger>
-      <SheetContent side="right" className="w-[400px]">
+      <SheetContent side="right" className="w-full max-w-[400px] text-sky-600">
         <SheetHeader>
-          <SheetTitle>Add Audios</SheetTitle>
+          <SheetTitle className="text-sky-600">Add Audios</SheetTitle>
         </SheetHeader>
         <div className="mt-4 space-y-4">
           <div className="space-y-2">
@@ -98,7 +103,7 @@ const AddAudio = ({
           <Button
             onClick={handleSubmit}
             disabled={isSubmitting}
-            className="w-full"
+            className="w-full bg-sky-600"
           >
             {isSubmitting ? "Adding..." : "Add Audios"}
           </Button>
