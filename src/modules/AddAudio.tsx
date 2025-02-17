@@ -9,6 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Fetch } from "@/middlewares/Fetch";
+import { toast } from "sonner";
 
 interface AddUnitSheetProps {
   collectionName: string | undefined;
@@ -61,8 +62,7 @@ const AddAudio = ({
           headers: { "Content-Type": "multipart/form-data" },
         }
       );
-
-      alert("Audio added successfully!");
+      toast("New audio has been added");
       setAudio({ file: null, label: "" });
       mutate();
     } catch (error) {

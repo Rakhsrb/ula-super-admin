@@ -28,6 +28,7 @@ import { Fetch } from "@/middlewares/Fetch";
 import { Link, useParams } from "react-router-dom";
 import { CollectionTypes } from "@/types/RootTypes";
 import { SquarePen, Trash } from "lucide-react";
+import { toast } from "sonner";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -51,6 +52,7 @@ const CollectionDetail = () => {
         name: bookNameInput,
         collectionId: data?.data._id,
       });
+      toast("Book has been created successfully!");
       setBookNameInput("");
       setIsModalOpen(false);
       mutate();
@@ -65,6 +67,8 @@ const CollectionDetail = () => {
       await Fetch.delete(`collection/deleteBook/${collectionName}/${bookId}`);
       setIsEditModalOpen(false);
       mutate();
+      toast("Book has been deleted successfully!");
+
     } catch (error) {
       console.log("Error deleting book:", error);
     }
@@ -173,7 +177,7 @@ const CollectionDetail = () => {
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-[425px]">
                     <DialogHeader>
-                      <DialogTitle>Edit Book Type Name</DialogTitle>
+                      <DialogTitle>Edit Book Name</DialogTitle>
                       <DialogDescription>
                         Make changes to the data type name here. Click save when
                         you're done.

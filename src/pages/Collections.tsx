@@ -13,6 +13,7 @@ import { AddNewCollection } from "@/modules/AddNewCollection";
 import { Link } from "react-router-dom";
 import { CollectionTypes } from "@/types/RootTypes";
 import useSWR from "swr";
+import { toast } from "sonner";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -36,6 +37,7 @@ export default function Collections() {
         false
       );
       (await Fetch.delete(`collection/deleteCollection/${id}`)).data;
+      toast("Collection has been deleted successfully!");
     } catch (error) {
       console.log(error);
     }
@@ -97,7 +99,7 @@ export default function Collections() {
                 className="bg-[#202020] rounded-lg overflow-hidden shadow-lg flex flex-col gap-3 relative h-[300px]"
               >
                 <DropdownMenu>
-                  <DropdownMenuTrigger className="absolute top-2 right-2">
+                  <DropdownMenuTrigger className="absolute top-2 z-10 right-2">
                     <EllipsisVertical
                       size={24}
                       className="text-black bg-gray-100 rounded-full"

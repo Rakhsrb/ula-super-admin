@@ -71,12 +71,7 @@ export function AddNewCollection({ mutate }: { mutate: any }) {
 
       console.log(response);
 
-      toast("Collection has been created successfully!", {
-        action: {
-          label: "Cancel",
-          onClick: () => console.log("Cancel"),
-        },
-      });
+      toast("Collection has been created successfully!");
       resetForm();
       setIsSheetOpen(false);
       mutate();
@@ -96,7 +91,7 @@ export function AddNewCollection({ mutate }: { mutate: any }) {
       }}
     >
       <SheetTrigger asChild>
-        <Button variant="default">New collection</Button>
+        <Button variant="default" className="bg-sky-600">New collection</Button>
       </SheetTrigger>
       <SheetContent className="h-screen overflow-y-auto w-full sm:max-w-md sm:h-auto bg-white text-sky-600 border-none">
         <SheetHeader>
@@ -136,7 +131,7 @@ export function AddNewCollection({ mutate }: { mutate: any }) {
           <div className="space-y-2">
             <Label
               htmlFor="photo"
-              className="block text-sm font-medium text-white"
+              className="block text-sm font-medium"
             >
               Photo
               <span

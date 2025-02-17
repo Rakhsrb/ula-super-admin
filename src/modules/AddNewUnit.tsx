@@ -9,6 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Fetch } from "@/middlewares/Fetch";
+import { toast } from "sonner";
 
 interface AddUnitSheetProps {
   collectionName: string;
@@ -36,6 +37,7 @@ const AddNewUnit = ({
         `collection/addUnit/${collectionName}/${bookName}/${levelId}`,
         { title }
       );
+      toast("New unit has been added");
       setTitle("");
       setIsSheetOpen(false);
       mutate();
