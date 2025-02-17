@@ -25,6 +25,7 @@ const AddNewUnit = ({
 }: AddUnitSheetProps) => {
   const [title, setTitle] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
 
   const handleSubmit = async () => {
     if (!title.trim()) return alert("Title is required!");
@@ -35,8 +36,8 @@ const AddNewUnit = ({
         `collection/addUnit/${collectionName}/${bookName}/${levelId}`,
         { title }
       );
-      alert("Unit added successfully!");
       setTitle("");
+      setIsSheetOpen(false);
       mutate();
     } catch (error) {
       console.error("Error adding unit:", error);
@@ -47,7 +48,12 @@ const AddNewUnit = ({
   };
 
   return (
-    <Sheet>
+    <Sheet
+      open={isSheetOpen}
+      onOpenChange={(open) => {
+        setIsSheetOpen(open);
+      }}
+    >
       <SheetTrigger asChild>
         <Button variant="secondary" className="text-sky-600">
           New Unit

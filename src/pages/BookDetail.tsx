@@ -38,7 +38,11 @@ const BookDetails = () => {
           {data.data.name}
         </h1>
         <Sheet>
-          <AddLevel collectionName={collectionName!} bookId={data.data._id} />
+          <AddLevel
+            collectionName={collectionName!}
+            bookId={data.data._id}
+            mutate={mutate}
+          />
         </Sheet>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

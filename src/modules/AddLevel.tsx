@@ -24,9 +24,11 @@ import { toast } from "sonner";
 export function AddLevel({
   collectionName,
   bookId,
+  mutate,
 }: {
   collectionName: string;
   bookId: string;
+  mutate: any;
 }) {
   const Options: { title: string }[] = [
     {
@@ -91,6 +93,7 @@ export function AddLevel({
       toast("New level has been added");
       resetForm();
       setIsSheetOpen(false);
+      mutate();
     } catch (error: any) {
       console.log(error);
     } finally {
